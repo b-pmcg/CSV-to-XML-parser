@@ -7,47 +7,43 @@ var builder = require('xmlbuilder');
     //set license csv input filepath here:
     var csvInput = '../../work/Book7.csv';
 
+    var root = builder.create('accounts', { version: '1.0', encoding: 'UTF-8' });
+    var accounts = root.ele('account');
+    accounts.ele('vendorId', '123')
+        .up().ele('customerNumber', '321')
+        .up().ele('type', 'Enroll')
+        .up().ele('officeName', 'OrthoFi')
+        .up().ele('Address1', '444 Street')
+        .up().ele('Address2', 'Apartment 1')
+        .up().ele('city', 'Denver')
+        .up().ele('stateCode', 'CO')
+        .up().ele('postalCode', '80210')
+        .up().ele('telephoneNumber', '3333333333')
+        .up().ele('faxnumber', '4444444444')
+        .up().ele('emailAddress', 'info@orthofi.com')
+        .up().ele('providerCount', '1000')
+        .up().ele('isClaimSubmitter', 1);
+    var taxIds = accounts.ele('taxIds');
+
     //read the csv and turn it into an object
     fs.createReadStream(csvInput)
         .pipe(csv())
         .on('data', function(data) {
-            //build the xml document
-            var root = builder.create('accounts', { version: '1.0', encoding: 'UTF-8' });
-
-            var accounts = root.ele('account');
-            accounts.ele('vendorId', data['officeName'])
-                .up().ele('customerNumber', data['customerNumber'])
-                .up().ele('type', data['Type'])
-                .up().ele('officeName', data['officeName'])
-                .up().ele('Address1', data['Address1'])
-                .up().ele('Address2', data['Address2'])
-                .up().ele('city', data['city'])
-                .up().ele('stateCode', data['stateCode'])
-                .up().ele('postalCode', data['postalCode'])
-                .up().ele('telephoneNumber', data['telephoneNumber'])
-                .up().ele('faxnumber', data['faxnumber'])
-                .up().ele('emailAddress', data['emailAddress'])
-                .up().ele('providerCount', data['providerCount'])
-                .up().ele('isClaimSubmitter', data['isClaimSubmitter']);
-            var taxIds = accounts.ele('taxIds');
-            // New nested level
-            for (i = 0; i < Object.keys(data).length; i++) {
-                taxIds.ele('taxId').ele('taxIdValue', data['TaxIdValue'])
-                    .up().ele('npi', data['NPI'])
-                    .up().ele('providerFirstName', data['Providor First Name'])
-                    .up().ele('providerLastName', data['Provider Last Name'])
-                    .up().ele('DoingBusinessAsName', data['Doing Business as Name'])
-                    .up().ele('contactName', data['Contact Name'])
-                    .up().ele('address1', data['Address1'])
-                    .up().ele('address2', data['Address2'])
-                    .up().ele('city', data['City'])
-                    .up().ele('stateCode', data['StateCode'])
-                    .up().ele('postalCode', data['PostalCode'])
-                    .up().ele('emailAddress', data['EmailAddress'])
-                    .up().ele('telephoneNumber', data['Telephone Number'])
-                    .up().ele('faxNumber', data['Fax Number'])
-                    .up().ele('isGroupPractice', data['IsGroupPractice']);
-            }
+            taxIds.ele('taxId').ele('taxIdValue', data['TaxIdValue'])
+                .up().ele('npi', data['NPI'])
+                .up().ele('providerFirstName', data['Providor First Name'])
+                .up().ele('providerLastName', data['Provider Last Name'])
+                .up().ele('DoingBusinessAsName', data['Doing Business as Name'])
+                .up().ele('contactName', data['Contact Name'])
+                .up().ele('address1', data['Address1'])
+                .up().ele('address2', data['Address2'])
+                .up().ele('city', data['City'])
+                .up().ele('stateCode', data['StateCode'])
+                .up().ele('postalCode', data['PostalCode'])
+                .up().ele('emailAddress', data['EmailAddress'])
+                .up().ele('telephoneNumber', data['Telephone Number'])
+                .up().ele('faxNumber', data['Fax Number'])
+                .up().ele('isGroupPractice', data['IsGroupPractice']);
 
             // .up().ele('Enrollments')
             // // New nested level
